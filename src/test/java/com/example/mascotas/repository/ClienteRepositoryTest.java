@@ -17,12 +17,15 @@ public class ClienteRepositoryTest {
     @Test
     public void guardarClienteTest() {
         Cliente cliente = new Cliente();
-        cliente.setNombre("Pedro Pascal");
+        cliente.setNombre("Pedro");
+        cliente.setApellido("Pascal");
 
         Cliente resultado = clienteRepository.save(cliente);
 
         assertNotNull(resultado.getId_cliente());
-        assertEquals("Pedro Pascal", resultado.getNombre());
+        assertEquals("Pedro", resultado.getNombre());
     }
+
+
     
 }

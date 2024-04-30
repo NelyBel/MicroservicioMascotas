@@ -24,14 +24,15 @@ public class ClienteServiceTest {
     public void guardarClienteTest() {
 
         Cliente cliente = new Cliente();
-        cliente.setNombre("Pepe Mujica");
+        cliente.setNombre("Pepe");
+        cliente.setApellido("Mujica");
 
         when(clienteRepositoryMock.save(any())).thenReturn(cliente);
 
         Cliente resultado = clienteService.createCliente(cliente);
      
 
-        assertEquals("Pepe Mujica", resultado.getNombre());
+        assertEquals("Mujica", resultado.getApellido());
     }
     
 }
