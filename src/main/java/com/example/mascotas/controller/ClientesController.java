@@ -1,7 +1,13 @@
 package com.example.mascotas.controller;
 
+import  org.springframework.hateoas.CollectionModel;
+import  org.springframework.hateoas.EntityModel;
+import  org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.example.mascotas.model.Cliente;
 import com.example.mascotas.service.ClienteService;
 
@@ -28,11 +35,28 @@ public class ClientesController {
     private ClienteService clienteService;
 
     @GetMapping
-    public List<Cliente> getAllCliente(){
+       public CollectionModel<EntityModel<Cliente>> getAllCliente() {
+        List<Cliente> clienteL = clienteService.getAllCliente();
+        log.info("GET /cliente");
+        log.info("Retornando todos los clientes");
+        List<EntityModel<Cliente>> clienteResources = clienteL.stream()
+        .map( cliente -> EntityModel.of(cliente,
+            WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getClienteById(cliente.getId_cliente())).withSelfRel()
+        ))
+            .collect(Collectors.toList());
+
+        WebMvcLinkBuilder linkTo = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(this.getClass()).getAllCliente());
+        CollectionModel<EntityModel<Cliente>> resources = CollectionModel.of(clienteResources, linkTo.withRel("cliente"));
+
+        return resources;
+    }
+
+   /* public List<Cliente> getAllCliente(){
         log.info("GET /Cliente");
         log.info("retornando todos los clientes");
         return clienteService.getAllCliente();
     }
+    */
         
     @GetMapping("/{id}")
     public ResponseEntity<Object> getClienteById(@PathVariable Long id) {

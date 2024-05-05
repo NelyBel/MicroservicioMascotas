@@ -28,10 +28,7 @@ public class ClienteServiceTest {
         cliente.setApellido("Mujica");
 
         when(clienteRepositoryMock.save(any())).thenReturn(cliente);
-
         Cliente resultado = clienteService.createCliente(cliente);
-     
-
         assertEquals("Mujica", resultado.getApellido());
     }
     
